@@ -8,7 +8,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 def set_alarm(alarm_time):
     print(f"Alarm set for {alarm_time}")
-    sound_file = "Tutorial Projects/alarmClock/Monsters Inc. Theme Song (Earrape).mp3"
+    sound_file = "Tutorial Projects/alarmClock/sans.mp3"
     is_running = True
     
     while is_running:
