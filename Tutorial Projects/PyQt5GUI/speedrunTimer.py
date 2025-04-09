@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QTextEdit
 from PyQt5.QtCore import QTimer, Qt, QTime
 from PyQt5.QtGui import QFont, QFontDatabase
 
@@ -7,6 +7,9 @@ class SpeedrunTimer(QWidget):
     def __init__(self):
         super().__init__()
         self.time_label = QLabel("00:00:00.00", self)
+        self.split_times = QTextEdit(self)
+        self.split_times.setReadOnly(True)
+        self.split_times.setFocusPolicy(Qt.NoFocus)
         self.timer = QTimer(self)
         self.time = QTime(0,0,0,0)
         self.setWindowFlags(Qt.FramelessWindowHint)
@@ -21,6 +24,7 @@ class SpeedrunTimer(QWidget):
         
         vbox = QVBoxLayout()
         vbox.addWidget(self.time_label)
+        vbox.addWidget(self.split_times)
         
         self.setLayout(vbox)
         
@@ -28,6 +32,8 @@ class SpeedrunTimer(QWidget):
         
         self.time_label.setStyleSheet("font-size: 100px;"
                                       "color: hsl(111, 100%, 50%);")
+        self.split_times.setStyleSheet("font-size: 50px;"
+                                      "color: hsl(0, 0%, 100%);")
         self.setStyleSheet("background-color: black;")
         
         fontid = QFontDatabase.addApplicationFont("Tutorial Projects\PyQt5GUI\DS-DIGIT.TTF")
@@ -35,8 +41,8 @@ class SpeedrunTimer(QWidget):
         my_font = QFont(font_family, 100)
         self.time_label.setFont(my_font)
         
-        # start timer
-        self.timer.start(10)
+        # start timer - INACTIVE FIRST
+        # self.timer.start(10)
         
         self.timer.timeout.connect(self.update_time)
         
@@ -67,15 +73,30 @@ class SpeedrunTimer(QWidget):
         self._mouse_pos = None
 
     def keyPressEvent(self, event):
+        # Close Event
         if event.key() == Qt.Key_Escape:
             self.close()
+        # Start Event
         if event.key() == Qt.Key_Space:
+            if self.timer.isActive():
+                split_time = self.format_time(self.time)
+                self.split_times.append(split_time)
+        # Reset Event
+        if event.key() == Qt.Key_R:
+            self.time = QTime(0,0,0,0)
+            self.time_label.setText(self.format_time(self.time))
+            self.split_times.clear()
+            self.timer.stop()
+            self.time_label.setStyleSheet("font-size: 100px;""color: hsl(111, 100%, 50%);")
+        # Pause Event
+        if event.key() == Qt.Key_F:
             if self.timer.isActive():
                 self.timer.stop()
                 self.time_label.setStyleSheet("font-size: 100px;""color: hsl(111, 100%, 30%);")
             else:
                 self.timer.start(10)
                 self.time_label.setStyleSheet("font-size: 100px;""color: hsl(111, 100%, 50%);")
+        
         
 
 if __name__ == "__main__":
