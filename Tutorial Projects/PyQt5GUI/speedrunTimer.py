@@ -76,8 +76,8 @@ class SpeedrunTimer(QWidget):
         # Close Event
         if event.key() == Qt.Key_Escape:
             self.close()
-        # Start Event
-        if event.key() == Qt.Key_Space:
+        # Split Event
+        if event.key() == Qt.Key_F:
             if self.timer.isActive():
                 split_time = self.format_time(self.time)
                 self.split_times.append(split_time)
@@ -88,8 +88,8 @@ class SpeedrunTimer(QWidget):
             self.split_times.clear()
             self.timer.stop()
             self.time_label.setStyleSheet("font-size: 100px;""color: hsl(111, 100%, 50%);")
-        # Pause Event
-        if event.key() == Qt.Key_F:
+        # Start/Pause Event
+        if event.key() == Qt.Key_Space:
             if self.timer.isActive():
                 self.timer.stop()
                 self.time_label.setStyleSheet("font-size: 100px;""color: hsl(111, 100%, 30%);")
